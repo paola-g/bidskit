@@ -66,7 +66,23 @@ def bind_fmaps(bids_subj_dir):
             bind_gre_fmaps(gre_fmap_jsons, bold_jsons, t_bold)
         else:
             print("    * No fieldmaps detected in fmap/ - skipping")
+    
+    if len(sess_dirs) == 0: # -no-sessions
+        # Get list of BOLD fMRI JSON sidecars and acquisition times
+        bold_jsons = glob(os.path.join(bids_subj_dir, 'func', '*task-*_bold.json'))
+        t_bold = np.array([acqtime_mins(fname) for fname in bold_jsons])
 
+        # Find SE-EPI and GRE fieldmaps in session fmap/ folder
+        fmap_dir = os.path.join(bids_subj_dir, 'fmap')
+        epi_fmap_jsons = glob(os.path.join(fmap_dir, '*_dir-*_epi.json'))
+        gre_fmap_jsons = glob(os.path.join(fmap_dir, '*_phasediff.json'))
+
+        if epi_fmap_jsons:
+            bind_epi_fmaps(epi_fmap_jsons, bold_jsons, t_bold)
+        elif gre_fmap_jsons:
+            bind_gre_fmaps(gre_fmap_jsons, bold_jsons, t_bold)
+        else:
+            print("    * No fieldmaps detected in fmap/ - skipping")
 
 def bind_epi_fmaps(epi_fmap_jsons, bold_jsons, t_bold):
     """
