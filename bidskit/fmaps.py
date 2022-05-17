@@ -67,7 +67,7 @@ def bind_fmaps(bids_subj_dir):
         else:
             print("    * No fieldmaps detected in fmap/ - skipping")
     
-    if len(sess_dirs) == 0: # -no-sessions
+    if len(sess_dirs) == 0: # --no-sessions
         # Get list of BOLD fMRI JSON sidecars and acquisition times
         bold_jsons = glob(os.path.join('func', '*task-*_bold.json'))
         t_bold = np.array([acqtime_mins(fname) for fname in bold_jsons])
@@ -182,7 +182,10 @@ def bids_intended_name(json_fname):
     tmp3 = os.path.dirname(tmp2)
     base3 = os.path.basename(tmp3)
 
-    return os.path.join(base3, base2, base1)
+    if 'ses-' in json_fname:
+        return os.path.join(base3, base2, base1)
+    else:
+        return os.path.join(base2, base1)
 
 
 def prune_intendedfors(bids_subj_dir, fmap_only):
