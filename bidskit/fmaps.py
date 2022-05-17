@@ -69,7 +69,7 @@ def bind_fmaps(bids_subj_dir):
     
     if len(sess_dirs) == 0: # --no-sessions
         # Get list of BOLD fMRI JSON sidecars and acquisition times
-        bold_jsons = glob(os.path.join('func', '*task-*_bold.json'))
+        bold_jsons = glob(os.path.join(bids_subj_dir,'func', '*task-*_bold.json'))
         t_bold = np.array([acqtime_mins(fname) for fname in bold_jsons])
 
         # Find SE-EPI and GRE fieldmaps in session fmap/ folder
